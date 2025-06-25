@@ -1,9 +1,9 @@
 
 Структура репозиторію
 
-.
-├── pre-commit                 # Файл pre-commit hook
-├── scripts/                   # Скрипт для автоінсталяції Gitleaks
+
+├── pre-commit                 
+├── scripts/                   
 │   └── install_gitleaks.sh
 └── gitleaks.exe # Для використання на Windows
 
@@ -23,13 +23,15 @@ git config gitleaks.precommit.enabled true
 
 
 Крок 3: Встановити Gitleaks
+
 Для Windows:
 Потрібно завантажжити файл gitleaks.exe з офіційного релізу
-
 Покладіть файл gitleaks.exe у корінь вашого проєкту
+
 
 Для Linux/macOS:
 Gitleaks встановиться автоматично через скрипт scripts/install_gitleaks.sh
+
 
 
 Крок 4: Перевірка
@@ -41,8 +43,13 @@ var token = "123456789:ABCDEF..."
 Виконайте:
 
 git add .
+
 git commit -m "Test gitleaks hook"
+
 Якщо токен знайдено — коміт буде заблоковано:
+
+
+
 
 Gitleaks виявив секрети в закомічених файлах! Коміт заблоковано.
 Якщо нічого не знайдено — коміт пройде успішно:
