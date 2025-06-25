@@ -1,0 +1,35 @@
+#!/bin/sh
+
+exec bash -c '
+# Перевіряємо, чи pre-commit hook увімкнений
+ENABLED=$(git config --get gitleaks.precommit.enabled)
+
+if [ "$ENABLED" != "true" ]; then
+    echo "⚙️  Gitleaks pre-commit hook вимкнений (git config gitleaks.precommit.enabled)."
+    exit 0
+fi
+
+# Автоматична інсталяція для Linux/macOS
+if ! command -v gitleaks &> /dev/null; then
+    echo "��� Gitleaks не знайдено. Виконую інсталяцію..."
+    bash scripts/install_gitleaks.sh
+fi
+
+echo "��� Запускаю gitleaks перевірку..."
+
+# Для Windows
+if [ -f "./gitleaks.exe" ]; then
+    ./gitleaks.exe detect --source . --no-git --report-format json --report-path gitleaks-report.json
+else
+    gitleaks detect --source . --no-git --report-format json --report-path gitleaks-report.json
+fi
+
+if [ $? -ne 0 ]; then
+    echo "❌ Gitleaks виявив секрети в закомічених файлах! Коміт заблоковано."
+    cat gitleaks-report.json
+    exit 1
+else
+    echo "✅ Ніяких секретів не знайдено. Коміт дозволено."
+    exit 0
+fi
+'
